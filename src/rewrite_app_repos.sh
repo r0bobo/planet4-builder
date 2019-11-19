@@ -39,12 +39,12 @@ do
     done
 
     #dev branches do not include the built assets, only master does
-    git --recurse-submodules --single-branch --branch ${git_branch} https://greenpeace.com/${reponame}
-    time npm ci --prefix ${reponame} ${reponame}
-    time npm run-script --prefix ${reponame} build
-    mkdir ${HOME}/source/built-dev-assets/${reponame}
-    cp ${reponame}/assets/build/* ${HOME}/source/built-dev-assets/${reponame}
-    rm -rf ${reponame}
+    git --recurse-submodules --single-branch --branch "${git_branch}" https://greenpeace.com/"${reponame}"
+    time npm ci --prefix "${reponame}" "${reponame}"
+    time npm run-script --prefix "${reponame}" build
+    mkdir -p "${HOME}/source/built-dev-assets/${reponame}"
+    cp "${reponame}/assets/build/*" "${HOME}/source/built-dev-assets/${reponame}"
+    rm -rf "${reponame}"
 
     echo "And now, delete any cached version of this package"
     rm -rf "${HOME}/source/cache/files/greenpeace/planet4-master-theme"

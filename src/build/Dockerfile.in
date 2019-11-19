@@ -29,13 +29,13 @@ RUN \
     time composer -v install --no-scripts --no-dev --no-ansi --no-interaction
 
 RUN \
-    for plugin_dir in ./built-dev-assets ; do
-        if [[ ${plugin_dir} == *theme ]]; then
-            subdir="plugins"
-        else
-            subdir="themes"
-        fi
-        mv ${plugin_dir}/* vendor/${subdir}/assets/build
+    for plugin_dir in ./built-dev-assets ; do \
+        if [[ ${plugin_dir} == *theme ]]; then \
+            subdir="themes" \
+        else \
+            subdir="plugins" \
+        fi \
+        mv ${plugin_dir}/* vendor/${subdir}/assets/build \
     done
 
 RUN composer run-script post-install-cmd
