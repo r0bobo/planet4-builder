@@ -30,12 +30,22 @@ RUN \
 
 RUN \
     for plugin_dir in ./built-dev-assets/* ; do \
+        echo $plugin_dir; \
         if [ -d "${plugin_dir}" ]; then \
-            if [[ "${plugin_dir}" == *theme ]]; then \
+            plugin_name=${plugin_dir#*/}; \
+            echo $plugin_name; \
+            if [[ "${plugin_name}" == *theme ]]; then \
                 subdir="themes"; \
             else \
                 subdir="plugins"; \
             fi; \
-            mv ${plugin_dir}/* vendor/"${subdir}"/assets/build; \
+            dest_dir=${SOURCE_PATH}/public/wp-content/"${subdir}"/"${plugin_name}"/assets/build; \
+            dest_dir_vendor=${SOURCE_PATH}/vendor/"${subdir}"/"${plugin_name}"/assets/build; \
+            echo $dest_dir \
+            echo $dest_dir_vendor \
+            mkdir -p ${dest_dir}; \
+            mkdir -p ${dest_dir_vendor}; \
+            cp ${plugin_dir}/* ${dest_dir_vendor}; \
+            cp ${plugin_dir}/* ${dest_dir}; \
         fi; \
     done
