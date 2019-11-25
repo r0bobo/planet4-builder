@@ -43,7 +43,7 @@ do
     time npm ci --prefix "${reponame}" "${reponame}"
     time npm run-script --prefix "${reponame}" build
     mkdir -p "${HOME}/source/built-dev-assets/${reponame}"
-    cp "${reponame}/assets/build/*" "${HOME}/source/built-dev-assets/${reponame}"
+    cp -a "${reponame}/assets/build/." "${HOME}/source/built-dev-assets/${reponame}"
     rm -rf "${reponame}"
 
     echo "And now, delete any cached version of this package"
