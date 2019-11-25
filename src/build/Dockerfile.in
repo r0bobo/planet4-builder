@@ -25,8 +25,8 @@ RUN \
       rm -f composer.lock; \
       time composer -v config --no-ansi extra.merge-plugin.require composer-local.json; \
     fi && \
-    time composer -v update --no-scripts --lock --no-dev --no-ansi && \
-    time composer -v install --no-scripts --no-dev --no-ansi --no-interaction
+    time composer -v update --lock --no-dev --no-ansi && \
+    time composer -v install --no-dev --no-ansi --no-interaction
 
 RUN \
     for plugin_dir in ./built-dev-assets ; do \
