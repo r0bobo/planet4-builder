@@ -32,12 +32,12 @@ RUN \
     for plugin_dir in ./built-dev-assets ; do \
         if [ -d "${plugin_dir}" ]; then \
             if [[ "${plugin_dir}" == *theme ]]; then \
-                subdir="themes" \
+                subdir="themes"; \
             else \
-                subdir="plugins" \
-            fi \
-            mv ${plugin_dir}/* vendor/"${subdir}"/assets/build \
-        fi \
+                subdir="plugins"; \
+            fi; \
+            mv ${plugin_dir}/* vendor/"${subdir}"/assets/build; \
+        fi; \
     done
 
 RUN composer run-script post-install-cmd
