@@ -39,5 +39,3 @@ RUN \
             mv ${plugin_dir}/* vendor/"${subdir}"/assets/build; \
         fi; \
     done
-
-RUN composer run-script post-install-cmd
