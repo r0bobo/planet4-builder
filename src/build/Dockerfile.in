@@ -29,7 +29,7 @@ RUN \
     time composer -v install --no-dev --no-ansi --no-interaction
 
 RUN \
-    for plugin_dir in ./built-dev-assets ; do \
+    for plugin_dir in ./built-dev-assets/* ; do \
         if [ -d "${plugin_dir}" ]; then \
             if [[ "${plugin_dir}" == *theme ]]; then \
                 subdir="themes"; \
