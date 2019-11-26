@@ -42,8 +42,14 @@ do
     git clone --recurse-submodules --single-branch --branch "${git_branch}" https://github.com/greenpeace/"${reponame}"
     time npm ci --prefix "${reponame}" "${reponame}"
     time npm run-script --prefix "${reponame}" build
-    mkdir -p "${HOME}/source/built-dev-assets/${reponame}"
-    cp -a "${reponame}/assets/build/." "${HOME}/source/built-dev-assets/${reponame}"
+    if [[ "${reponame}" == *theme ]]; then \
+        subdir="themes"; \
+    else \
+        subdir="plugins"; \
+    fi; \
+    buildDir="${HOME}/source/built-dev-assets/public/wp-content/${subdir}/${reponame}/assets/build/"
+    mkdir -p "${buildDir}"
+    cp -a "${reponame}/assets/build/." "${buildDir}"
     rm -rf "${reponame}"
 
     echo "And now, delete any cached version of this package"
