@@ -24,7 +24,8 @@ do
 
   if [ -n "${!plugin_branch_env_var}" ] ; then
     composer_dev_prefix="dev-"
-    # temp solution to remove it and add it again, would be better if this script got branch without dev- before it
+    # temp solution to remove it and add it again where it is needed. It would be better if this script got branchname
+    # without dev- before it, so stripping it as the first thing allows us to change that
     branch=${!plugin_branch_env_var#"$composer_dev_prefix"}
 
     echo "Replacing ${reponame} with branch ${branch}"
@@ -38,7 +39,10 @@ do
       fi
     done
 
-    #dev branches do not include the built assets, only master does.
+    # dev branches do not include the built assets, only master does. So we need to build them here.
+    # All built files are put together in built-dev-assets, which has the same directory structure as /app/source.
+    # In the last step in the Dockerfile the contents of this directory are rsync'ed over the source.
+    # This is not ideal, however there was no better alternative as packagist only works with files in a github repo.
     git clone --recurse-submodules --single-branch --branch "${branch}" https://github.com/greenpeace/"${reponame}"
     time npm ci --prefix "${reponame}" "${reponame}"
     time npm run-script --prefix "${reponame}" build
