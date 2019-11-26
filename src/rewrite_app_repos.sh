@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 set -ex
 
-files=(
+composer_files=(
   "${HOME}/source/composer.json"
   "${HOME}/source/composer-local.json"
   "${HOME}/merge/composer.json"
   "${HOME}/merge/composer-local.json"
 )
 
-branches=(
+plugin_branch_env_vars=(
   "MASTER_THEME_BRANCH"
   "PLUGIN_BLOCKS_BRANCH"
   "PLUGIN_GUTENBERG_BLOCKS_BRANCH"
@@ -18,28 +18,28 @@ branches=(
 
 echo "rewrite_app_repos"
 
-for branch in "${branches[@]}"
+for plugin_branch_env_var in "${plugin_branch_env_vars[@]}"
 do
-  reponame=planet4-$( echo "${branch%_*}" | tr '[:upper:]' '[:lower:]' | sed 's/_/-/g')
-  composer_dev_prefix="dev-"
-  # temp solution, would be better if this script got branch without dev- before it
-  git_branch=${!branch#"$composer_dev_prefix"}
+  reponame=planet4-$( echo "${plugin_branch_env_var%_*}" | tr '[:upper:]' '[:lower:]' | sed 's/_/-/g')
 
-  if [ -n "${!branch}" ] ; then
+  if [ -n "${!plugin_branch_env_var}" ] ; then
+    composer_dev_prefix="dev-"
+    # temp solution to remove it and add it again, would be better if this script got branch without dev- before it
+    branch=${!plugin_branch_env_var#"$composer_dev_prefix"}
 
-    echo "Replacing ${reponame} with branch ${!branch}"
+    echo "Replacing ${reponame} with branch ${branch}"
 
-    for f in "${files[@]}"
+    for f in "${composer_files[@]}"
     do
       if [ -e "$f" ]
       then
         echo " - $f"
-        sed -i "s|\"greenpeace\\/${reponame}\" : \".*\",|\"greenpeace\\/${reponame}\" : \"${!branch}\",|g" "${f}"
+        sed -i "s|\"greenpeace\\/${reponame}\" : \".*\",|\"greenpeace\\/${reponame}\" : \"dev-${branch}\",|g" "${f}"
       fi
     done
 
     #dev branches do not include the built assets, only master does.
-    git clone --recurse-submodules --single-branch --branch "${git_branch}" https://github.com/greenpeace/"${reponame}"
+    git clone --recurse-submodules --single-branch --branch "${branch}" https://github.com/greenpeace/"${reponame}"
     time npm ci --prefix "${reponame}" "${reponame}"
     time npm run-script --prefix "${reponame}" build
     if [[ "${reponame}" == *theme ]]; then \
